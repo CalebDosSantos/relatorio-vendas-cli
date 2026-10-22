@@ -1,0 +1,10 @@
+data_venda,produto,quantidade,preco_unitario
+2025-01-05,Camiseta,3,49.90
+2025-01-06,Calça Jeans,dois,139.90
+2025-01-08,,1,39.90
+2025-01-10,Tênis,1,249.90
+2025-01-12,Boné,0,39.90
+2025-01-15,Meia (par),5,14.90
+2025-02-30,Camiseta,1,49.90
+2025-02-02,Jaqueta,1,-299.90
+2025-02-10,Camiseta,2,49.90
