@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vendas-cli"
+version = "1.0.0"
+description = "CLI para gerar relatórios de vendas a partir de arquivos CSV."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Caleb Santos" }]
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "pytest-cov>=4", "mypy>=1.5", "ruff>=0.4"]
+
+[project.scripts]
+vendas-cli = "vendas_cli.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+vendas_cli = ["py.typed"]
+
+[tool.coverage.run]
+source = ["vendas_cli"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 90
+exclude_also = ["if __name__ == .__main__.:"]
+
+[tool.mypy]
+strict = true
+mypy_path = "src"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
