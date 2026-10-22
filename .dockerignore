@@ -1,0 +1,14 @@
+.git
+.github
+.venv
+**/__pycache__
+**/*.egg-info
+build
+dist
+.coverage
+.pytest_cache
+.mypy_cache
+.ruff_cache
+tests
+*.pdf
+vendas_exemplo - python.csv

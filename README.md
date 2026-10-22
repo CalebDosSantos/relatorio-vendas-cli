@@ -69,6 +69,28 @@ Saída em JSON (valores monetários como números com 2 casas):
 }
 ```
 
+### Com Docker
+
+Sem instalar Python, dá para usar a aplicação por um container:
+
+```bash
+docker build -t relatorio-vendas-cli .
+
+# Sem argumentos, mostra a ajuda
+docker run --rm relatorio-vendas-cli
+
+# CSVs de exemplo embutidos na imagem
+docker run --rm relatorio-vendas-cli /app/examples/vendas_com_data.csv -f json --start 2025-01-01 --end 2025-03-31
+
+# Seus próprios arquivos: monte o diretório atual em /data
+docker run --rm -v "$PWD:/data" relatorio-vendas-cli vendas.csv --format text
+
+# Gravando o relatório no host com o seu usuário (evita arquivo com dono errado)
+docker run --rm -u "$(id -u):$(id -g)" -v "$PWD:/data" relatorio-vendas-cli vendas.csv -f json -o relatorio.json
+```
+
+A imagem é multi-stage, baseada em `python:3.13-slim`, e roda como usuário sem privilégios. O comando `vendas-cli` é o `ENTRYPOINT`, então tudo após o nome da imagem são argumentos da CLI. O código de saída do container é o mesmo da CLI.
+
 ### Opções
 
 | Opção | Descrição |

@@ -21,3 +21,14 @@ jobs:
       - run: ruff format --check src tests
       - run: mypy src
       - run: pytest
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t relatorio-vendas-cli .
+      - name: Smoke test
+        run: |
+          docker run --rm relatorio-vendas-cli /app/examples/vendas_exemplo.csv | grep "R\$ 599,30"
+          docker run --rm -v "$PWD/examples:/data" relatorio-vendas-cli vendas_com_data.csv -f json \
+            --start 2025-01-01 --end 2025-03-31 | grep '"valor_total": 818.8'
