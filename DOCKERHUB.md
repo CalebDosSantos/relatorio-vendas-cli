@@ -110,6 +110,7 @@ O relatório vai para stdout e os logs para stderr. O código de saída do conta
 | Tag | Descrição |
 |---|---|
 | `latest` | Última versão publicada |
-| `1.0`, `1.0.0` | Versões fixas (semver) |
+| `1.1`, `1.1.0` | Versão atual: consultas por produto, ranking e período |
+| `1.0`, `1.0.0` | Primeira versão |
 
 Plataformas: `linux/amd64` e `linux/arm64`. A imagem é baseada em `python:3.13-slim` e roda como usuário sem privilégios.

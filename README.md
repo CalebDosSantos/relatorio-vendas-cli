@@ -140,7 +140,7 @@ docker run --rm -v "$PWD:/data" calebdev/relatorio-vendas-cli vendas.csv --forma
 docker run --rm -u "$(id -u):$(id -g)" -v "$PWD:/data" calebdev/relatorio-vendas-cli vendas.csv -f json -o relatorio.json
 ```
 
-Para fixar uma versão, use a tag correspondente (ex.: `calebdev/relatorio-vendas-cli:1.0.0`). Para construir a imagem a partir do código:
+Para fixar uma versão, use a tag correspondente (ex.: `calebdev/relatorio-vendas-cli:1.1.0`). Para construir a imagem a partir do código:
 
 ```bash
 docker build -t relatorio-vendas-cli .
