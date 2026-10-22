@@ -12,6 +12,7 @@ from pathlib import Path
 from vendas_cli import __version__
 from vendas_cli.core import build_report
 from vendas_cli.exceptions import VendasError
+from vendas_cli.models import Granularity, SortKey
 from vendas_cli.output import OutputFormat, render
 from vendas_cli.parser import parse_date, read_sales
 
@@ -26,6 +27,16 @@ def _date_arg(value: str) -> date:
         return parse_date(value)
     except ValueError as exc:
         raise argparse.ArgumentTypeError(str(exc)) from exc
+
+
+def _positive_int(value: str) -> int:
+    try:
+        number = int(value)
+    except ValueError:
+        number = 0
+    if number < 1:
+        raise argparse.ArgumentTypeError(f"esperado inteiro positivo, recebido {value!r}")
+    return number
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -44,6 +55,32 @@ def build_arg_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--start", type=_date_arg, help="data inicial inclusiva (AAAA-MM-DD)")
     parser.add_argument("--end", type=_date_arg, help="data final inclusiva (AAAA-MM-DD)")
+    queries = parser.add_argument_group("consultas")
+    queries.add_argument(
+        "-p",
+        "--product",
+        action="append",
+        default=[],
+        metavar="NOME",
+        help="considera só este produto (repita para vários; ignora maiúsculas)",
+    )
+    queries.add_argument(
+        "--sort",
+        choices=[k.value for k in SortKey],
+        default=SortKey.REVENUE.value,
+        help="ordenação da tabela de produtos (padrão: faturamento)",
+    )
+    queries.add_argument(
+        "--top",
+        type=_positive_int,
+        metavar="N",
+        help="mostra só os N primeiros produtos e soma o resto em 'Outros'",
+    )
+    queries.add_argument(
+        "--group-by",
+        choices=[g.value for g in Granularity],
+        help="quebra o relatório por período, com variação em relação ao anterior",
+    )
     parser.add_argument(
         "-o", "--output", type=Path, help="grava o relatório no arquivo em vez da saída padrão"
     )
@@ -77,7 +114,15 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         sales = read_sales(args.arquivo, encoding=args.encoding, skip_invalid=args.skip_invalid)
-        report = build_report(sales, start=args.start, end=args.end)
+        report = build_report(
+            sales,
+            start=args.start,
+            end=args.end,
+            products=args.product,
+            sort=SortKey(args.sort),
+            top=args.top,
+            group_by=Granularity(args.group_by) if args.group_by else None,
+        )
         content = render(report, OutputFormat(args.format))
         if args.output:
             args.output.write_text(content + "\n", encoding="utf-8")
