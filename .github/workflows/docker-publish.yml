@@ -36,3 +36,11 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      # O token precisa do escopo "Read, Write, Delete" para alterar a descrição.
+      - uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ env.IMAGE }}
+          short-description: CLI em Python que gera relatórios de vendas (texto/JSON) a partir de arquivos CSV
+          readme-filepath: ./DOCKERHUB.md
